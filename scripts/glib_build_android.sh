@@ -8,10 +8,11 @@ HOST_TAG=linux-x86_64
 BUILD_DIR="../build"
 
 function build_for_arch() {
-	cross_file="${BUILD_DIR}/${1}/cross_file.txt"
-	TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/$HOST_TAG
-	mkdir -p ${BUILD_DIR}/${1}
-	cat << EOF > "${cross_file}"
+	if ! test -e ${BUILD_DIR}/${1}/install/usr/local/lib/libglib-2.0.a; then
+		cross_file="${BUILD_DIR}/${1}/cross_file.txt"
+		TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/$HOST_TAG
+		mkdir -p ${BUILD_DIR}/${1}
+		cat << EOF > "${cross_file}"
 [host_machine]
 system = 'android'
 cpu_family = '${4}'
@@ -35,11 +36,12 @@ EOF
 #c_args = ['-flto']
 #c_link_args = ['-flto']
 
-	../tools/meson/meson.py ../libs/glib ${BUILD_DIR}/${1} --cross-file "${cross_file}" \
-		-Dinternal_pcre=true \
-		-Ddefault_library=static
-	ninja -C ${BUILD_DIR}/${1}
-	DESTDIR=install ninja -C ${BUILD_DIR}/${1} install
+../tools/meson/meson.py ../libs/glib ${BUILD_DIR}/${1} --cross-file "${cross_file}" \
+	-Dinternal_pcre=true \
+	-Ddefault_library=static
+ninja -C ${BUILD_DIR}/${1}
+DESTDIR=install ninja -C ${BUILD_DIR}/${1} install
+fi
 }
 
 build_for_arch armv7a-linux-androideabi 16 arm-linux-androideabi arm armv7a
