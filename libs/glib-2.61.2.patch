@@ -1,0 +1,104 @@
+diff -urNb glib-2.61.2-orig/glib/gconvert.c glib-2.61.2-patched/glib/gconvert.c
+--- glib-2.61.2-orig/glib/gconvert.c	2019-07-29 15:04:40.000000000 +0200
++++ glib-2.61.2-patched/glib/gconvert.c	2019-08-26 12:55:09.337838450 +0200
+@@ -32,6 +32,7 @@
+ #ifdef G_OS_WIN32
+ #include "win_iconv.c"
+ #endif
++#include "pma_iconv.c"
+ 
+ #ifdef G_PLATFORM_WIN32
+ #define STRICT
+diff -urNb glib-2.61.2-orig/glib/pma_iconv.c glib-2.61.2-patched/glib/pma_iconv.c
+--- glib-2.61.2-orig/glib/pma_iconv.c	1970-01-01 01:00:00.000000000 +0100
++++ glib-2.61.2-patched/glib/pma_iconv.c	2019-08-26 12:53:24.076777646 +0200
+@@ -0,0 +1,29 @@
++/*
++ * dummy iconv library.
++ *
++ * This file is placed in the public domain.
++ *
++ */
++
++/*
++ * Android ndk now defines a weird iconv.h header so the following line is not needed.
++ * It defines the functions for API >= 28 but the type for all the API-s. Why?
++ * Disable-ing our own definition so compile works.
++ typedef void* iconv_t;
++*/
++
++iconv_t iconv_open(const char *tocode, const char *fromcode);
++int iconv_close(iconv_t _cd);
++size_t iconv(iconv_t _cd, /* const */ char **inbuf, size_t *inbytesleft, char **outbuf, size_t *outbytesleft);
++
++iconv_t iconv_open(const char *tocode, const char *fromcode) {
++  return (iconv_t)(-1);
++}
++
++int iconv_close(iconv_t _cd) {
++  return -1;
++}
++
++size_t iconv(iconv_t _cd, /* const */ char **inbuf, size_t *inbytesleft, char **outbuf, size_t *outbytesleft) {
++  return (size_t)(-1);
++}
+diff -urNb glib-2.61.2-orig/meson.build glib-2.61.2-patched/meson.build
+--- glib-2.61.2-orig/meson.build	2019-07-29 15:04:40.000000000 +0200
++++ glib-2.61.2-patched/meson.build	2019-08-26 12:54:44.026546260 +0200
+@@ -50,7 +50,7 @@
+ library_version = '@0@.@1@.@2@'.format(soversion, current, interface_age)
+ darwin_versions = [current + 1, '@0@.@1@'.format(current + 1, interface_age)]
+ 
+-configinc = include_directories('.')
++configinc = include_directories('./')
+ glibinc = include_directories('glib')
+ gobjectinc = include_directories('gobject')
+ gmoduleinc = include_directories('gmodule')
+@@ -514,11 +514,6 @@
+   endif
+ endforeach
+ 
+-# Check that stpcpy() is usable; must use header
+-if cc.has_function('stpcpy', prefix : '#include <string.h>')
+-  glib_conf.set('HAVE_STPCPY', 1)
+-endif
+-
+ # Check that posix_memalign() is usable; must use header
+ if cc.has_function('posix_memalign', prefix : '#include <stdlib.h>')
+   glib_conf.set('HAVE_POSIX_MEMALIGN', 1)
+@@ -1691,33 +1686,10 @@
+ 
+ glibconfig_conf.set10('G_HAVE_GROWING_STACK', growing_stack)
+ 
+-# Tests for iconv
+-#
+-# We should never use the MinGW C library's iconv because it may not be
+-# available in the actual runtime environment. On Windows, we always use
+-# the built-in implementation
+ iconv_opt = get_option('iconv')
+-if host_system == 'windows'
+-  libiconv = []
+-  # We have a #include "win_iconv.c" in gconvert.c on Windows, so we don't need
+-  # any external library for it
+-  if iconv_opt != 'auto'
++libiconv = []
++if iconv_opt != 'auto'
+     warning('-Diconv was set to @0@, which was ignored')
+-  endif
+-else
+-  found_iconv = false
+-  if ['auto', 'libc'].contains(iconv_opt) and cc.has_function('iconv_open')
+-    libiconv = []
+-    found_iconv = true
+-  endif
+-  if not found_iconv and ['auto', 'external'].contains(iconv_opt) and cc.has_header_symbol('iconv.h', 'iconv_open')
+-    libiconv = [cc.find_library('iconv')]
+-    found_iconv = true
+-  endif
+-
+-  if not found_iconv
+-    error('iconv implementation "@0@" not found'.format(iconv_opt))
+-  endif
+ endif
+ 
+ if get_option('internal_pcre')

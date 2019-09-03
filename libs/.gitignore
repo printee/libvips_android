@@ -1,0 +1,21 @@
+libjpeg-turbo
+# git clone https://github.com/libjpeg-turbo/libjpeg-turbo.git
+libpng
+# wget https://download.sourceforge.net/libpng/lpng1636.zip
+# unzip lpng1636
+# rm lpng1636.zip
+# mv lpng1636 libpng
+libexpat
+# wget https://github.com/libexpat/libexpat/releases/download/R_2_2_7/expat-2.2.7.tar.gz
+# tar xf expat-2.2.7.tar.gz
+# rm expat-2.2.7.tar.gz
+# mv expat-2.2.7 libexpat
+libvips
+# wget https://github.com/libvips/libvips/releases/download/v8.8.1/vips-8.8.1.tar.gz
+# tar xf vips-8.8.1.tar.gz
+# rm vips-8.8.1.tar.gz
+# mv vips-8.8.1 libvips
+glib
+# ./glib_fetch.sh
+libexif
+# git clone https://github.com/libexif/libexif
