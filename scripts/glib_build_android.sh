@@ -5,10 +5,11 @@ cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1
 
 NDK=~/Android/Sdk/ndk-bundle
 HOST_TAG=linux-x86_64
-BUILD_DIR="../build"
+BUILD_DIR="$(pwd)/../build"
 
 function build_for_arch() {
 	if ! test -e ${BUILD_DIR}/${1}/install/usr/local/lib/libglib-2.0.a; then
+		fake_root="${BUILD_DIR}/${1}/install/usr/local"
 		cross_file="${BUILD_DIR}/${1}/cross_file.txt"
 		TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/$HOST_TAG
 		mkdir -p ${BUILD_DIR}/${1}
@@ -20,8 +21,8 @@ cpu = '${5}'
 endian = 'little'
 
 [properties]
-c_args = []
-c_link_args = []
+c_args = ['-I${fake_root}/include', '-Wno-error=format-nonliteral']
+c_link_args = ['-L${fake_root}/lib']
 
 [binaries]
 c = '$TOOLCHAIN/bin/${1}${2}-clang'
