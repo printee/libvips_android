@@ -21,3 +21,13 @@ libexif
 # git clone https://github.com/libexif/libexif
 gettext-tiny
 # git clone https://github.com/sabotage-linux/gettext-tiny.git
+libde265
+# wget https://github.com/strukturag/libde265/releases/download/v1.0.8/libde265-1.0.8.tar.gz
+# tar xf libde265-1.0.8.tar.gz
+# rm libde265-1.0.8.tar.gz
+# mv libde265-1.0.8 libde265
+libheif
+# wget https://github.com/strukturag/libheif/releases/download/v1.12.0/libheif-1.12.0.tar.gz
+# tar xf libheif-1.12.0.tar.gz
+# rm libheif-1.12.0.tar.gz
+# mv libheif-1.12.0 libheif

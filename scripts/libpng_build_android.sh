@@ -30,7 +30,8 @@ do
 done
 
 function build_for_arch() {
-	if ! test -e build/${1}; then
+	INSTALL_LOC="${INSTALL_DIR}/${1}/install/usr/local"
+	if ! test -e "${INSTALL_LOC}/lib/libpng.a"; then
 		#export CFLAGS="$CFLAGS -fPIC -O2 -flto"
 		export CFLAGS="$CFLAGS -fPIC"
 		export TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/$HOST_TAG
@@ -41,7 +42,7 @@ function build_for_arch() {
 		export LD=$TOOLCHAIN/bin/${3}-ld
 		export RANLIB=$TOOLCHAIN/bin/${3}-ranlib
 		export STRIP=$TOOLCHAIN/bin/${3}-strip
-		./configure "--prefix=${INSTALL_DIR}/${1}/install/usr/local" --host ${1} \
+		./configure "--prefix=${INSTALL_LOC}" --host ${1} \
 			--disable-shared \
 			--enable-static
 		make -j4

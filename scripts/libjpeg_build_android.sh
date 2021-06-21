@@ -13,7 +13,8 @@ PATH_TO_LIBJPEG_TURBO="../libs/libjpeg-turbo/"
 cd ${PATH_TO_LIBJPEG_TURBO}
 
 function build_for_arch() {
-	if ! test -e build/${1}; then
+	INSTALL_LOC="${INSTALL_DIR}/${1}/install/usr/local"
+	if ! test -e "${INSTALL_LOC}/lib/libjpeg.a"; then
 		mkdir -p build/${1}
 		cd build/${1}
 		#export CFLAGS="$CFLAGS -fPIC -Os -flto"
@@ -24,7 +25,7 @@ function build_for_arch() {
 			-DANDROID_TOOLCHAIN=${TOOLCHAIN} \
 			-DCMAKE_ASM_FLAGS="--target=${1}${2}" \
 			-DCMAKE_TOOLCHAIN_FILE=${NDK}/build/cmake/android.toolchain.cmake \
-			-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}/${1}/install/usr/local \
+			-DCMAKE_INSTALL_PREFIX=${INSTALL_LOC} \
 			-DENABLE_SHARED=0 \
 			-DENABLE_STATIC=1 \
 			../../

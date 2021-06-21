@@ -11,7 +11,8 @@ INSTALL_DIR="$(pwd)/../build"
 cd "../libs/libvips"
 
 function build_for_arch() {
-	if ! test -e build/${1}; then
+	fake_sysroot=${INSTALL_DIR}/${1}/install
+	if ! test -e "${fake_sysroot}/usr/local/lib/libvips.so"; then
 		#export CFLAGS="$CFLAGS -fPIC -O2 -flto"
 		export CFLAGS="$CFLAGS -fPIC -O2"
 		export TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/$HOST_TAG
@@ -23,14 +24,13 @@ function build_for_arch() {
 		export LD="$TOOLCHAIN/bin/${3}-ld"
 		export RANLIB=$TOOLCHAIN/bin/${3}-ranlib
 		export STRIP=$TOOLCHAIN/bin/${3}-strip
-		fake_sysroot=${INSTALL_DIR}/${1}/install
 		export PKG_CONFIG_DIR=
 		export PKG_CONFIG_LIBDIR=${fake_sysroot}/usr/lib/pkgconfig:${fake_sysroot}/usr/share/pkgconfig
 		export PKG_CONFIG_SYSROOT_DIR=${fake_sysroot}
 		export PKG_CONFIG_PATH=${fake_sysroot}/usr/local/lib/pkgconfig
 		#--disable-shared \
-		#--enable-static \
-		./configure \
+			#--enable-static \
+			./configure \
 			"--prefix=${fake_sysroot}/usr/local" \
 			"--with-sysroot=${NDK}/sysroot" \
 			--host ${1} \
@@ -38,6 +38,7 @@ function build_for_arch() {
 			"--with-zlib=${NDK}/sysroot" \
 			"--with-png-includes=${fake_sysroot}/usr/local/include" \
 			"--with-png-libraries=${fake_sysroot}/usr/local/libs" \
+			"--with-heif=${fake_sysroot}/usr/local" \
 			--without-gsf \
 			--without-fftw \
 			--without-magick \
@@ -45,7 +46,6 @@ function build_for_arch() {
 			--without-lcms \
 			--without-OpenEXR \
 			--without-nifti \
-			--without-heif \
 			--without-pdfium \
 			--without-poppler \
 			--without-rsvg \
@@ -61,7 +61,7 @@ function build_for_arch() {
 			--without-giflib \
 			--without-imagequant \
 
-		make -j4
+			make -j4
 		mkdir -p build/${1}
 		make install
 		make distclean

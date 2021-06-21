@@ -6,13 +6,21 @@ cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1
 NDK=~/Android/Sdk/ndk-bundle
 HOST_TAG=linux-x86_64
 INSTALL_FOLDER="$(pwd)/../build"
+CONFIGURE_PARAMS="${2}"
+LIBRARY_NAME="${1}"
 
-cd "../libs/libexpat"
+cd "../libs/${LIBRARY_NAME}"
+
+if ! test -e configure; then
+	# on ubuntu derivatives install with: sudo apt-get install autoconf libtool autopoint
+	autoreconf -i
+fi
 
 function build_for_arch() {
-	if ! test -e build/${1}; then
-		export CFLAGS="$CFLAGS -fPIC -O2"
-		#export CFLAGS="$CFLAGS -fPIC -O2 -flto"
+	INSTALL_LOC="${INSTALL_FOLDER}/${1}/install/usr/local"
+	if ! test -e "${INSTALL_LOC}/lib/${LIBRARY_NAME}.a"; then
+		export CFLAGS="$CFLAGS -fPIC -O3"
+		#export CFLAGS="$CFLAGS -fPIC -O3 -flto"
 		export TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/$HOST_TAG
 		export AR=$TOOLCHAIN/bin/${3}-ar
 		export AS=$TOOLCHAIN/bin/${3}-as
@@ -21,7 +29,8 @@ function build_for_arch() {
 		export LD=$TOOLCHAIN/bin/${3}-ld
 		export RANLIB=$TOOLCHAIN/bin/${3}-ranlib
 		export STRIP=$TOOLCHAIN/bin/${3}-strip
-		./configure "--prefix=${INSTALL_FOLDER}/${1}/install/usr/local" --host ${1} \
+		./configure "--prefix=${INSTALL_LOC}" --host ${1} \
+			${CONFIGURE_PARAMS} \
 			--disable-shared \
 			--enable-static
 		make -j4
