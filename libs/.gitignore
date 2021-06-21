@@ -11,10 +11,10 @@ libexpat
 # rm expat-2.2.7.tar.gz
 # mv expat-2.2.7 libexpat
 libvips
-# wget https://github.com/libvips/libvips/releases/download/v8.8.1/vips-8.8.1.tar.gz
-# tar xf vips-8.8.1.tar.gz
-# rm vips-8.8.1.tar.gz
-# mv vips-8.8.1 libvips
+# wget https://github.com/libvips/libvips/releases/download/v8.11.0/vips-8.11.0.tar.gz
+# tar xf vips-8.11.0.tar.gz
+# rm vips-8.11.0.tar.gz
+# mv vips-8.11.0 libvips
 glib
 # ./glib_fetch.sh
 libexif
