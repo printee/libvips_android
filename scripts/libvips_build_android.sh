@@ -34,6 +34,7 @@ function build_for_arch() {
 			"--with-png-includes=${fake_sysroot}/usr/local/include" \
 			"--with-png-libraries=${fake_sysroot}/usr/local/libs" \
 			"--with-heif=${fake_sysroot}/usr/local" \
+			"--with-libwebp=${fake_sysroot}/usr/local" \
 			--without-gsf \
 			--without-fftw \
 			--without-magick \
@@ -50,7 +51,6 @@ function build_for_arch() {
 			--without-analyze \
 			--without-radiance \
 			--without-cfitsio \
-			--without-libwebp \
 			--without-pangoft2 \
 			--without-tiff \
 			--without-giflib \

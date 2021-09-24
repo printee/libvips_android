@@ -16,5 +16,6 @@ cd scripts
 CFLAGS=-fno-integrated-as ./autoconf_generic_build_android.sh libde265 "--disable-shared --enable-static --disable-dec265 --disable-sherlock265"
 #CFLAGS=-mfpu=neon ./autoconf_generic_build_android.sh libde265 "--disable-dec265 --disable-sherlock265"
 ./autoconf_generic_build_android.sh libheif "--disable-static --enable-shared --disable-go --disable-examples --disable-aom --disable-x265 --disable-gdk-pixbuf --disable-rav1e"
+./autoconf_generic_build_android.sh libwebp "--disable-shared --enable-static"
 ./libvips_build_android.sh
 #./missing_symbols_fix_build_android.sh
