@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "$(pwd)/ndk_path_only.sh"
+source "$( dirname "${BASH_SOURCE[0]}" )/ndk_path_only.sh"
 
 export CC=$TOOLCHAIN/bin/$TARGET$API-clang
 export CXX=$TOOLCHAIN/bin/$TARGET$API-clang++
