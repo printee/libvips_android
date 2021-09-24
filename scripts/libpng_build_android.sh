@@ -4,8 +4,6 @@ set -e
 cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1
 
 
-NDK=~/Android/Sdk/ndk-bundle
-HOST_TAG=linux-x86_64
 INSTALL_DIR="$(pwd)/../build"
 
 cd "../libs/libpng"
@@ -34,14 +32,10 @@ function build_for_arch() {
 	if ! test -e "${INSTALL_LOC}/lib/libpng.a"; then
 		#export CFLAGS="$CFLAGS -fPIC -O2 -flto"
 		export CFLAGS="$CFLAGS -fPIC"
-		export TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/$HOST_TAG
-		export AR=$TOOLCHAIN/bin/${3}-ar
-		export AS=$TOOLCHAIN/bin/${3}-as
-		export CC=$TOOLCHAIN/bin/${1}${2}-clang
-		export CXX=$TOOLCHAIN/bin/${1}${2}-clang++
-		export LD=$TOOLCHAIN/bin/${3}-ld
-		export RANLIB=$TOOLCHAIN/bin/${3}-ranlib
-		export STRIP=$TOOLCHAIN/bin/${3}-strip
+		export TARGET=${1}
+                export API=${2}
+                export ABI=${3}
+                source ../../ndk_paths.sh
 		./configure "--prefix=${INSTALL_LOC}" --host ${1} \
 			--disable-shared \
 			--enable-static
@@ -52,7 +46,7 @@ function build_for_arch() {
 	fi
 }
 
-build_for_arch armv7a-linux-androideabi 16 arm-linux-androideabi
+build_for_arch armv7a-linux-androideabi 21 arm-linux-androideabi
 build_for_arch aarch64-linux-android 21 aarch64-linux-android
-build_for_arch i686-linux-android 16 i686-linux-android
+build_for_arch i686-linux-android 21 i686-linux-android
 build_for_arch x86_64-linux-android 21 x86_64-linux-android

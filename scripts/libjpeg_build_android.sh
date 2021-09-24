@@ -3,9 +3,7 @@
 set -e
 cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1
 
-
-NDK=~/Android/Sdk/ndk-bundle
-HOST_TAG=linux-x86_64
+source ../ndk_paths.sh
 TOOLCHAIN="clang"
 INSTALL_DIR="$(pwd)/../build"
 PATH_TO_LIBJPEG_TURBO="../libs/libjpeg-turbo/"
@@ -35,7 +33,7 @@ function build_for_arch() {
 	fi
 }
 
-build_for_arch armv7a-linux-androideabi 16 armeabi-v7a "-DANDROID_ARM_MODE=arm"
+build_for_arch armv7a-linux-androideabi 21 armeabi-v7a "-DANDROID_ARM_MODE=arm"
 build_for_arch aarch64-linux-android 21 arm64-v8a "-DANDROID_ARM_MODE=arm"
-build_for_arch i686-linux-android 16 x86 ""
+build_for_arch i686-linux-android 21 x86 ""
 build_for_arch x86_64-linux-android 21 x86_64 ""

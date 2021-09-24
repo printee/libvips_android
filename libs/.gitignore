@@ -31,3 +31,8 @@ libheif
 # tar xf libheif-1.12.0.tar.gz
 # rm libheif-1.12.0.tar.gz
 # mv libheif-1.12.0 libheif
+libwebp
+# wget https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-1.2.1.tar.gz
+# tar xf libwebp-1.2.1.tar.gz
+# rm libwebp-1.2.1.tar.gz
+# mv libwebp-1.2.1 libwebp
