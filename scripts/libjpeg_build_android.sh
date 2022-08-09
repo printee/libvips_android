@@ -22,7 +22,7 @@ function build_for_arch() {
 			-DANDROID_PLATFORM=android-${2} \
 			-DANDROID_TOOLCHAIN=${TOOLCHAIN} \
 			-DCMAKE_ASM_FLAGS="--target=${1}${2}" \
-			-DCMAKE_TOOLCHAIN_FILE=${NDK}/build/cmake/android.toolchain.cmake \
+			-DCMAKE_TOOLCHAIN_FILE=${NDK_PATH}/build/cmake/android.toolchain.cmake \
 			-DCMAKE_INSTALL_PREFIX=${INSTALL_LOC} \
 			-DENABLE_SHARED=0 \
 			-DENABLE_STATIC=1 \
