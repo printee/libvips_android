@@ -54,18 +54,6 @@ diff -urNb glib-2.61.2-orig/meson.build glib-2.61.2-patched/meson.build
  glibinc = include_directories('glib')
  gobjectinc = include_directories('gobject')
  gmoduleinc = include_directories('gmodule')
-@@ -514,11 +514,6 @@
-   endif
- endforeach
- 
--# Check that stpcpy() is usable; must use header
--if cc.has_function('stpcpy', prefix : '#include <string.h>')
--  glib_conf.set('HAVE_STPCPY', 1)
--endif
--
- # Check that posix_memalign() is usable; must use header
- if cc.has_function('posix_memalign', prefix : '#include <stdlib.h>')
-   glib_conf.set('HAVE_POSIX_MEMALIGN', 1)
 @@ -1691,33 +1686,10 @@
  
  glibconfig_conf.set10('G_HAVE_GROWING_STACK', growing_stack)
