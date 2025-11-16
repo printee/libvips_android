@@ -28,10 +28,10 @@ c_link_args = ['-L${fake_root}/lib']
 [binaries]
 c = '$TOOLCHAIN/bin/${1}${2}-clang'
 cpp = '$TOOLCHAIN/bin/${1}${2}-clang++'
-ar = '$TOOLCHAIN/bin/${3}-ar'
-strip = '$TOOLCHAIN/bin/${1}-strip'
-ranlib = '$TOOLCHAIN/bin/${1}-ranlib'
-ld = '$TOOLCHAIN/bin/ld'
+ar = '$TOOLCHAIN/bin/llvm-ar'
+strip = '$TOOLCHAIN/bin/llvm-strip'
+ranlib = '$TOOLCHAIN/bin/llvm-ranlib'
+ld = '$TOOLCHAIN/bin/${1}${2}-clang'
 EOF
 
 #c_args = ['-flto']

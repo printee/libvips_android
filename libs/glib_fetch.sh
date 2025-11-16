@@ -3,9 +3,12 @@
 set -e
 cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1
 
-wget https://gitlab.gnome.org/GNOME/glib/-/archive/2.61.2/glib-2.61.2.tar.gz
-tar xf glib-2.61.2.tar.gz
-rm glib-2.61.2.tar.gz
-mv glib-2.61.2 glib
+#VERSION="2.72.4"
+VERSION="2.68.4"
+
+wget https://gitlab.gnome.org/GNOME/glib/-/archive/$VERSION/glib-$VERSION.tar.gz
+tar xf glib-$VERSION.tar.gz
+rm glib-$VERSION.tar.gz
+mv glib-$VERSION glib
 cd glib
-patch -sp1 < ../glib-2.61.2.patch
+patch -sp1 < ../glib-$VERSION.patch
