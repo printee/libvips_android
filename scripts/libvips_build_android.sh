@@ -36,10 +36,12 @@ function build_for_arch() {
 		export PKG_CONFIG_LIBDIR=${fake_sysroot}/usr/local/lib/pkgconfig
 		export PKG_CONFIG_SYSROOT_DIR=${fake_sysroot}
 		export PKG_CONFIG_PATH=${fake_sysroot}/usr/local/lib/pkgconfig
+		local_ldflags="$LDFLAGS -Wl,--whole-archive ${TOOLCHAIN}/lib/clang/21/lib/linux/libclang_rt.builtins-${3%%-*}-android.a -Wl,--no-whole-archive"
 		#export LIBS="-lde265"
 		#--disable-shared \
 			#--enable-static \
 		CFLAGS="${local_cflags}" \
+		LDFLAGS="${local_ldflags}" \
 			./configure \
 			--disable-static --enable-shared \
 			"--prefix=${fake_sysroot}/usr/local" \
