@@ -25,10 +25,20 @@ function build_for_arch() {
 		export CFLAGS="$CFLAGS -fPIC -O3"
 		#export CFLAGS="$CFLAGS -fPIC -O3 -flto"
 		export CXXFLAGS="$CXXFLAGS -fPIC -O3"
+		local_cflags="$CFLAGS"
+		local_cxxflags="$CXXFLAGS"
+		if [[ ${3} == "aarch64-linux-android" ]]
+                then
+                        local_cflags="$CFLAGS -mno-outline-atomics"
+                        local_cxxflags="$CXXFLAGS -mno-outline-atomics"
+                fi
 		export PKG_CONFIG_DIR=
                 export PKG_CONFIG_LIBDIR=${INSTALL_LOC}/lib/pkgconfig
                 export PKG_CONFIG_PATH=${INSTALL_LOC}/lib/pkgconfig
-		./configure "--prefix=${INSTALL_LOC}" --host ${1} \
+		CFLAGS="${local_cflags}" \
+			CXXFLAGS="${local_cxxflags}" \
+			./configure \
+			"--prefix=${INSTALL_LOC}" --host ${1} \
 			${CONFIGURE_PARAMS}
 		make -j4
 		mkdir -p build/${1}

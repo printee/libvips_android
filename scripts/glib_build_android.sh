@@ -13,6 +13,11 @@ function build_for_arch() {
                 export API=${2}
                 export ABI=${3}
                 source ../ndk_path_only.sh
+		additional_c_flags=""
+		if [[ "$5" == "aarch64" ]]
+		then
+			additional_c_flags=", '-mno-outline-atomics'"
+		fi
 		mkdir -p ${BUILD_DIR}/${1}
 		cat << EOF > "${cross_file}"
 [host_machine]
@@ -22,7 +27,7 @@ cpu = '${5}'
 endian = 'little'
 
 [properties]
-c_args = ['-I${fake_root}/include', '-Wno-error=format-nonliteral']
+c_args = ['-I${fake_root}/include', '-Wno-error=format-nonliteral'${additional_c_flags}]
 c_link_args = ['-L${fake_root}/lib']
 
 [binaries]

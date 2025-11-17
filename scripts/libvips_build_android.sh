@@ -6,6 +6,16 @@ cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1
 
 INSTALL_DIR="$(pwd)/../build"
 
+# Deleting *.la files is needed so there is no absolute RPATH dependency on libheif.so
+# which would then fail to load on android devices
+#
+# The libheif.so dependency should be as below:
+# readelf -d ./build/aarch64-linux-android/install/usr/local/lib/libvips.so |grep NEEDED
+# 0x0000000000000001 (NEEDED)             Shared library: [libheif.so]
+#
+#
+find "$INSTALL_DIR" -name "*.la" -exec rm {} \;
+
 cd "../libs/libvips"
 
 function build_for_arch() {
@@ -13,6 +23,11 @@ function build_for_arch() {
 	if ! test -e "${fake_sysroot}/usr/local/lib/libvips.so"; then
 		#export CFLAGS="$CFLAGS -fPIC -O2 -flto"
 		export CFLAGS="$CFLAGS -fPIC -O2"
+		local_cflags="$CFLAGS"
+                if [[ ${3} == "aarch64-linux-android" ]]
+		then
+			local_cflags="$CFLAGS -mno-outline-atomics"
+		fi
                 export TARGET=${1}
                 export API=${2}
                 export ABI=${3}
@@ -24,6 +39,7 @@ function build_for_arch() {
 		#export LIBS="-lde265"
 		#--disable-shared \
 			#--enable-static \
+		CFLAGS="${local_cflags}" \
 			./configure \
 			--disable-static --enable-shared \
 			"--prefix=${fake_sysroot}/usr/local" \
